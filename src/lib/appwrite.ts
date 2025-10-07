@@ -1,5 +1,6 @@
 import { Client, Databases, Storage, Account, Query, ID } from 'appwrite';
 import { PROJECT_ID, DATABASE_ID, MOVIE_COLLECTION_ID as COLLECTION_ID, APPWRITE_ENDPOINT } from './appwrite-services';
+import type { MoviesModel } from '../model/movies';
 
 const client = new Client()
   .setEndpoint(APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1')
@@ -9,12 +10,12 @@ const account = new Account(client);
 const database = new Databases(client);
 const storage = new Storage(client);
 
-export const updateSearchCount = async (searchTerm: string, movie: any) => {
+export const updateSearchCount = async (searchTerm: string, movie: MoviesModel) => {
 
-  // 1. Use Appwrite SDK to check if the search term exists in the database
+  // 1. Use Appwrite SDK to check if the first movieid is recorded from the search term exists in the database
   try {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-      Query.equal('searchTerm', searchTerm),
+      Query.equal('movie_id', movie.id),
     ])
 
     // // 2. If it does, update the count

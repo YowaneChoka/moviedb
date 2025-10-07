@@ -4,6 +4,7 @@ import Spinner from './components/Spinner.tsx'
 import MovieCard from './components/MovieCard.tsx'
 import { useDebounce } from 'react-use'
 import { getTrendingMovies, updateSearchCount } from './lib/appwrite.ts'
+import type { MoviesModel } from './model/movies.ts'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -21,14 +22,13 @@ const App = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [movieList, setMovieList] = useState([]);
+  const [movieList, setMovieList] = useState<MoviesModel[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const [trendingMovies, setTrendingMovies] = useState([]);
 
-  // Debounce the search term to prevent making too many API requests
-  // by waiting for the user to stop typing for 500ms
+  // Debounce the search term by waiting for the user to stop typing for a buffer
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
   const fetchMovies = async (query = '') => {
@@ -42,22 +42,23 @@ const App = () => {
 
       const response = await fetch(endpoint, API_OPTIONS);
 
-      if(!response.ok) {
+      if (!response.ok) {
         throw new Error('Failed to fetch movies');
       }
 
       const data = await response.json();
 
-      if(data.Response === 'False') {
+      if (data.Response === 'False') {
         setErrorMessage(data.Error || 'Failed to fetch movies');
         setMovieList([]);
         return;
       }
 
-      setMovieList(data.results || []);
+      const moviesRes: MoviesModel[] = data.results;
+      setMovieList((moviesRes) || []);
 
-      if(query && data.results?.length > 0) {
-        await updateSearchCount(query, data.results[0]);
+      if (query && moviesRes?.length > 0) {
+        await updateSearchCount(query, moviesRes[0]);
       }
     } catch (error) {
       console.error(`Error fetching movies: ${error}`);
@@ -87,7 +88,7 @@ const App = () => {
 
   return (
     <main>
-      <div className="pattern"/>
+      <div className="pattern" />
 
       <div className="wrapper">
         <header>
