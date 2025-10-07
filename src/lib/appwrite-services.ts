@@ -1,11 +1,16 @@
 import { database, storage } from './appwrite';
 import { ID, Query } from 'appwrite';
 
+export const APPWRITE_ENDPOINT = import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
+
 // Database and Collection IDs - Replace with your actual IDs
+export const PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID || 'project-id';;
 export const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || 'portfolio-db';
 export const PROJECTS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_PROJECTS_COLLECTION_ID || 'projects';
 export const SKILLS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_SKILLS_COLLECTION_ID || 'skills';
 export const EXPERIENCE_COLLECTION_ID = import.meta.env.VITE_APPWRITE_EXPERIENCE_COLLECTION_ID || 'experience';
+export const MOVIE_COLLECTION_ID = import.meta.env.VITE_APPWRITE_MOVIE_COLLECTION_ID || 'movie-collection';
+export const TRENDING_COLLECTION_ID = import.meta.env.VITE_APPWRITE_TRENDING_COLLECTION_ID || 'movie-trending';
 export const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID || 'portfolio-assets';
 
 // Types for portfolio data
